@@ -10,6 +10,8 @@ data class BeerDtoModel(
     val description: String?,
     val abv: Double,
     val ibu: Double,
+    val isOrganic: Boolean,
+    val isRetired: Boolean,
     val labels: LabelsDtoModel,
     val style: StyleDtoModel,
 )
@@ -20,6 +22,8 @@ fun BeerDtoModel.toBeer(): BeerModel {
         description = description,
         abv = abv,
         ibu = ibu,
+        isOrganic = if (isOrganic) "Y" else "N",
+        isRetired = if (isRetired) "Y" else "N",
         labels = labels.toLabels(),
         style = style.toStyle(),
     )
