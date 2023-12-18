@@ -20,8 +20,8 @@ class BeerService {
             // Ищем совпадения в названии пива, а также в названии стиля
             filters.add(
                 or(
-                    (BeerModel::name).regex(query, "i"),
-                    (BeerModel::style / StyleModel::name).regex(query, "i"),
+                    (BeerModel::name).regex(Regex.escape(query), "i"),
+                    (BeerModel::style / StyleModel::name).regex(Regex.escape(query), "i"),
                 )
             )
         }
