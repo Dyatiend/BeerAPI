@@ -88,17 +88,9 @@ class BeerService {
             .toList()
     }
 
-    fun findStyles(pageKey: Int?, pageSize: Int?): List<StyleModel> {
+    fun findStyles(): List<StyleModel> {
         return beerCollection
             .distinct(BeerModel::style)
-            .apply {
-                // Если переданы параметры пагинации
-                if (pageKey != null && pageSize != null) {
-                    // Передаем часть данных
-                    skip(pageKey)
-                    limit(pageSize)
-                }
-            }
             .toList()
     }
 

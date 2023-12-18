@@ -47,13 +47,7 @@ fun Application.configureRouting() {
 
         get("/styles") {
             try {
-                val pageKey = call.parameters["pageKey"]?.toIntOrNull()
-                val pageSize = call.parameters["pageSize"]?.toIntOrNull()
-
-                val styles = service.findStyles(
-                    pageKey = pageKey,
-                    pageSize = pageSize,
-                ).map(StyleModel::toDto)
+                val styles = service.findStyles().map(StyleModel::toDto)
 
                 call.respond(
                     HttpStatusCode.OK,
