@@ -12,5 +12,9 @@ enum class Sort(val value: String) {
                 entry.value == value
             } ?: NAME
         }
+
+        fun allValues(): List<String> {
+            return entries.map(Sort::value)
+        }
     }
 }

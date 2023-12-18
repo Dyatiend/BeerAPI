@@ -11,5 +11,9 @@ enum class Order(val value: String) {
                 entry.value == value
             } ?: ASC
         }
+
+        fun allValues(): List<String> {
+            return entries.map(Order::value)
+        }
     }
 }
