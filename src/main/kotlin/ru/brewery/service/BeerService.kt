@@ -1,6 +1,5 @@
 package ru.brewery.service
 
-import com.mongodb.client.model.Sorts
 import org.bson.conversions.Bson
 import org.litote.kmongo.*
 import ru.brewery.data.*
@@ -63,15 +62,15 @@ class BeerService {
 
         // Выбираем поле сортировки
         val sortField = when (filter?.sort) {
-            Sort.NAME, null -> BeerModel::name.name
-            Sort.ABV -> BeerModel::abv.name
-            Sort.IBU -> BeerModel::ibu.name
+            Sort.NAME, null -> BeerModel::name
+            Sort.ABV -> BeerModel::abv
+            Sort.IBU -> BeerModel::ibu
         }
 
         // Выбираем вариант сортировки
         val sort = when (filter?.order) {
-            Order.ASC, null -> Sorts.ascending(sortField)
-            Order.DESC -> Sorts.descending(sortField)
+            Order.ASC, null -> ascending(sortField)
+            Order.DESC -> descending(sortField)
         }
 
         // Выполняем запрос
@@ -104,12 +103,28 @@ class BeerService {
     }
 
     fun createConfig(): ConfigModel {
-        val styles = beerCollection.distinct(BeerModel::style)
+        val abvMin = beerCollection
+            .find(BeerModel::abv ne null)
+            .sort(ascending(BeerModel::abv))
+            .limit(1).firstNotNullOf(BeerModel::abv)
+        val abvMax = beerCollection
+            .find(BeerModel::abv ne null)
+            .sort(descending(BeerModel::abv))
+            .limit(1).firstNotNullOf(BeerModel::abv)
+        val ibuMin = beerCollection
+            .find(BeerModel::ibu ne null)
+            .sort(ascending(BeerModel::ibu))
+            .limit(1).firstNotNullOf(BeerModel::ibu)
+        val ibuMax = beerCollection
+            .find(BeerModel::ibu ne null)
+            .sort(descending(BeerModel::ibu))
+            .limit(1).firstNotNullOf(BeerModel::ibu)
+
         return ConfigModel(
-            abvMin = styles.minOf { style -> style.abvMin },
-            abvMax = styles.maxOf { style -> style.abvMax },
-            ibuMin = styles.minOf { style -> style.ibuMin },
-            ibuMax = styles.maxOf { style -> style.ibuMax },
+            abvMin = abvMin,
+            abvMax = abvMax,
+            ibuMin = ibuMin,
+            ibuMax = ibuMax,
         )
     }
 
