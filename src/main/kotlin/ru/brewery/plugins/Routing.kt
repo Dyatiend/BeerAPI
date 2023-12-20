@@ -5,8 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
-import ru.brewery.data.BeerModel
-import ru.brewery.data.StyleModel
 import ru.brewery.data.dto.ErrorResponse
 import ru.brewery.data.dto.FilterDtoModel
 import ru.brewery.data.dto.toFilter
@@ -27,15 +25,15 @@ fun Application.configureRouting() {
                 val pageKey = call.parameters["pageKey"]?.toIntOrNull()
                 val pageSize = call.parameters["pageSize"]?.toIntOrNull()
 
-                val beers = service.findBeers(
+                val response = service.findBeers(
                     filter = filter,
                     pageKey = pageKey,
                     pageSize = pageSize,
-                ).map(BeerModel::toDto)
+                ).toDto()
 
                 call.respond(
                     HttpStatusCode.OK,
-                    beers,
+                    response,
                 )
             } catch (_: Exception) {
                 call.respond(
@@ -47,11 +45,11 @@ fun Application.configureRouting() {
 
         get("/styles") {
             try {
-                val styles = service.findStyles().map(StyleModel::toDto)
+                val response = service.findStyles().toDto()
 
                 call.respond(
                     HttpStatusCode.OK,
-                    styles,
+                    response,
                 )
             } catch (_: Exception) {
                 call.respond(

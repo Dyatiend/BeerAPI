@@ -10,7 +10,7 @@ class BeerService {
     private val database = client.getDatabase(DATABASE_NAME)
     private val beerCollection = database.getCollection<BeerModel>(COLLECTION_NAME)
 
-    fun findBeers(filter: FilterModel?, pageKey: Int?, pageSize: Int?): List<BeerModel> {
+    fun findBeers(filter: FilterModel?, pageKey: Int?, pageSize: Int?): BeersResponseModel {
         // Список всех фильтров, которые будут применены к запросу
         val filters = mutableListOf<Bson>()
 
@@ -74,7 +74,7 @@ class BeerService {
         }
 
         // Выполняем запрос
-        return beerCollection
+        val beers = beerCollection
             .find(and(filters))
             .sort(sort)
             .apply {
@@ -86,12 +86,21 @@ class BeerService {
                 }
             }
             .toList()
+
+        return BeersResponseModel(
+            items = beers,
+            firstPageKey = 0,
+            lastPageKey = beerCollection.countDocuments().toInt() - 1,
+        )
     }
 
-    fun findStyles(): List<StyleModel> {
-        return beerCollection
+    fun findStyles(): StylesResponseModel {
+        val styles = beerCollection
             .distinct(BeerModel::style)
             .toList()
+        return StylesResponseModel(
+            items = styles,
+        )
     }
 
     fun createConfig(): ConfigModel {
