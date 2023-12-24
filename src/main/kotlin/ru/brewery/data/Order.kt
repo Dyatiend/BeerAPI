@@ -1,5 +1,7 @@
 package ru.brewery.data
 
+import java.util.*
+
 enum class Order(val value: String) {
     ASC("asc"),
     DESC("desc");
@@ -8,7 +10,7 @@ enum class Order(val value: String) {
 
         fun fromValue(value: String?): Order {
             return entries.firstOrNull { entry ->
-                entry.value == value
+                entry.value == value?.lowercase(Locale.getDefault())
             } ?: ASC
         }
 

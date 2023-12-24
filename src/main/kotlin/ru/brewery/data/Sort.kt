@@ -1,5 +1,7 @@
 package ru.brewery.data
 
+import java.util.*
+
 enum class Sort(val value: String) {
     NAME("name"),
     ABV("abv"),
@@ -9,7 +11,7 @@ enum class Sort(val value: String) {
 
         fun fromValue(value: String?): Sort {
             return entries.firstOrNull { entry ->
-                entry.value == value
+                entry.value == value?.lowercase(Locale.getDefault())
             } ?: NAME
         }
 
